@@ -1,0 +1,29 @@
+#!/bin/sh
+
+# cd into modules directory to find .ko files:
+# ~ explicitly not using modprobe because i assume we arent supposed to?
+for d in /lib/modules/$(uname -r)/extra /lib/modules/$(uname -r)/updates; do
+    [ -d "$d" ] && cd "$d" && break
+done
+
+moddir="$PWD"
+echo Module directory: $moddir
+
+case "$1" in
+    start)
+        echo "Loading aesdchar..."
+        /usr/bin/aesdchar_load
+        echo "AESDCHAR LOAD END"
+        ;;
+    stop)
+        echo "Unloading aesdchar..."
+        /usr/bin/aesdchar_unload
+        echo "MODULE UNLOAD END"
+        ;;
+    *)
+        echo "Usage: $0 {start|stop}"
+        exit 1
+        ;;
+esac
+
+exit 0
